@@ -11,6 +11,7 @@ import {
 } from 'motion/react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useI18n } from '../i18n'
+import { usePerf } from '../perf'
 
 export const ease = [0.16, 1, 0.3, 1] as const
 
@@ -22,8 +23,13 @@ export function Preloader({ onDone }: { onDone: () => void }) {
 
   useEffect(() => {
     document.documentElement.style.overflow = 'hidden'
+    let seen = false
+    try {
+      seen = sessionStorage.getItem('seen') === '1'
+      sessionStorage.setItem('seen', '1')
+    } catch {}
     const c = animate(0, 100, {
-      duration: 1.8,
+      duration: seen ? 0.4 : 1.5,
       ease: [0.65, 0, 0.35, 1],
       onUpdate: (v) => setN(Math.round(v)),
       onComplete: () => {
@@ -64,6 +70,7 @@ export function Preloader({ onDone }: { onDone: () => void }) {
 
 /* ───────── Custom cursor (fine pointers only) ───────── */
 export function Cursor() {
+  const { lite } = usePerf()
   const x = useMotionValue(-100)
   const y = useMotionValue(-100)
   const sx = useSpring(x, { stiffness: 500, damping: 40, mass: 0.4 })
@@ -75,7 +82,10 @@ export function Cursor() {
   const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    if (lite || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      setEnabled(false)
+      return
+    }
     setEnabled(true)
     document.body.classList.add('has-cursor')
     const root = document.documentElement
@@ -93,7 +103,7 @@ export function Cursor() {
       window.removeEventListener('pointermove', move)
       document.body.classList.remove('has-cursor')
     }
-  }, [x, y])
+  }, [x, y, lite])
 
   if (!enabled) return null
   return (
@@ -170,6 +180,19 @@ export function SplitLetters({
   className?: string
   start?: boolean
 }) {
+  const { lite } = usePerf()
+  if (lite) {
+    return (
+      <motion.span
+        className={`inline-block ${className}`}
+        initial={{ opacity: 0, y: 16 }}
+        animate={start ? { opacity: 1, y: 0 } : undefined}
+        transition={{ duration: 0.6, ease, delay: Math.min(delay, 0.6) }}
+      >
+        {text}
+      </motion.span>
+    )
+  }
   const byWord = ARABIC.test(text)
   const tokens = byWord ? text.split(' ') : text.split(/(?<= )/)
   return (
@@ -200,6 +223,11 @@ export function SplitLetters({
 
 /* ───────── Scroll-scrubbed word reveal ───────── */
 export function ScrubText({ text, className = '' }: { text: string; className?: string }) {
+  const { lite } = usePerf()
+  if (lite) return <p className={className}>{text}</p>
+  return <ScrubTextFull text={text} className={className} />
+}
+function ScrubTextFull({ text, className = '' }: { text: string; className?: string }) {
   const ref = useRef<HTMLParagraphElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.4'] })
   const words = text.split(' ')
@@ -275,13 +303,14 @@ export function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
 
 /* ───────── Velocity-reactive marquee (always LTR so the loop works in RTL pages) ───────── */
 export function Marquee({ items, className = '' }: { items: string[]; className?: string }) {
+  const { lite } = usePerf()
   const { scrollY } = useScroll()
   const velocity = useVelocity(scrollY)
   const smooth = useSpring(velocity, { damping: 50, stiffness: 300 })
   const skew = useTransform(smooth, [-3000, 3000], [-10, 10])
   const row = [...items, ...items]
   return (
-    <motion.div dir="ltr" style={{ skewX: skew }} className={`overflow-hidden ${className}`}>
+    <motion.div dir="ltr" style={{ skewX: lite ? 0 : skew }} className={`overflow-hidden ${className}`}>
       <div className="marquee-track flex w-max gap-8 whitespace-nowrap sm:gap-10">
         {row.map((t, i) => (
           <span key={i} className="flex items-center gap-8 sm:gap-10">

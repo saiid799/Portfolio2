@@ -1,5 +1,7 @@
 import { motion, useMotionTemplate, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
+import { useInView } from 'motion/react'
+import { usePerf } from '../perf'
 import { projects } from '../data'
 import { useI18n } from '../i18n'
 import { Reveal } from './fx'
@@ -8,12 +10,17 @@ type P = (typeof projects)[number]
 
 /* ───────── Built-in animated visual per project ───────── */
 function Visual({ p }: { p: P }) {
+  const { lite } = usePerf()
+  const box = useRef<HTMLDivElement>(null)
+  // infinite loops only run while the card is on screen (and never in lite mode)
+  const onScreen = useInView(box, { margin: '100px' })
+  const run = onScreen && !lite
   const c = `hsl(${p.hue} 90% 62%)`
   const soft = `hsl(${p.hue} 90% 62% / 0.18)`
-  const loop = { repeat: Infinity, ease: 'easeInOut' as const }
+  const loop = { repeat: run ? Infinity : 0, ease: 'easeInOut' as const }
 
   return (
-    <div dir="ltr" className="relative flex h-full min-h-[240px] w-full items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black/30 sm:min-h-[300px]">
+    <div ref={box} dir="ltr" className="relative flex h-full min-h-[240px] w-full items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black/30 sm:min-h-[300px]">
       <div
         aria-hidden
         className="absolute inset-0 opacity-40"
@@ -23,7 +30,7 @@ function Visual({ p }: { p: P }) {
           maskImage: 'radial-gradient(circle at 50% 50%, #000, transparent 70%)',
         }}
       />
-      <div aria-hidden className="absolute h-3/4 w-3/4 rounded-full blur-[70px]" style={{ background: soft }} />
+      <div aria-hidden className="absolute h-full w-full rounded-full" style={{ background: `radial-gradient(circle, ${soft}, transparent 62%)` }} />
 
       {p.kind === 'ring' && (
         <div className="relative flex flex-col items-center gap-5">
@@ -47,7 +54,7 @@ function Visual({ p }: { p: P }) {
               <motion.span
                 key={m}
                 className="rounded-full border border-white/15 px-3 py-1 font-mono text-[10px] uppercase tracking-wider"
-                animate={{ y: [0, -5, 0] }}
+                animate={run ? { y: [0, -5, 0] } : { y: 0 }}
                 transition={{ duration: 3, delay: i * 0.3, ...loop }}
               >
                 {m}
@@ -65,7 +72,7 @@ function Visual({ p }: { p: P }) {
                 key={i}
                 className="w-1 rounded-full sm:w-1.5"
                 style={{ background: c, height: 24 }}
-                animate={{ scaleY: [0.3, 1 + ((i * 7) % 5) / 4, 0.4] }}
+                animate={run ? { scaleY: [0.3, 1 + ((i * 7) % 5) / 4, 0.4] } : { scaleY: 0.3 + ((i * 7) % 5) / 6 }}
                 transition={{ duration: 1.4 + (i % 4) * 0.2, delay: i * 0.07, ...loop }}
               />
             ))}
@@ -75,7 +82,7 @@ function Visual({ p }: { p: P }) {
               <motion.span
                 key={l}
                 className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs"
-                animate={{ y: [0, -4, 0] }}
+                animate={run ? { y: [0, -4, 0] } : { y: 0 }}
                 transition={{ duration: 3, delay: i * 0.25, ...loop }}
               >
                 {l}
@@ -138,14 +145,19 @@ function Visual({ p }: { p: P }) {
 }
 
 function useIsLg() {
+  const { lite } = usePerf()
   const [lg, setLg] = useState(false)
   useEffect(() => {
+    if (lite) {
+      setLg(false)
+      return
+    }
     const mq = window.matchMedia('(min-width: 1024px) and (min-height: 640px)')
     const on = () => setLg(mq.matches)
     on()
     mq.addEventListener('change', on)
     return () => mq.removeEventListener('change', on)
-  }, [])
+  }, [lite])
   return lg
 }
 

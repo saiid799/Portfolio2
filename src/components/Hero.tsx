@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'moti
 import { useEffect, useRef } from 'react'
 import { techMarquee } from '../data'
 import { useI18n } from '../i18n'
+import { usePerf } from '../perf'
 import { ease, Magnetic, Marquee, SplitLetters } from './fx'
 import { Portrait } from './Portrait'
 
@@ -12,6 +13,7 @@ import { Portrait } from './Portrait'
  */
 export function Hero({ start }: { start: boolean }) {
   const { t } = useI18n()
+  const { lite } = usePerf()
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '25%'])
@@ -22,13 +24,14 @@ export function Hero({ start }: { start: boolean }) {
   const nbx = useTransform(bx, (v) => -v)
   const nby = useTransform(by, (v) => -v)
   useEffect(() => {
+    if (lite || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
     const m = (e: PointerEvent) => {
       bx.set((e.clientX / window.innerWidth - 0.5) * 120)
       by.set((e.clientY / window.innerHeight - 0.5) * 120)
     }
     window.addEventListener('pointermove', m)
     return () => window.removeEventListener('pointermove', m)
-  }, [bx, by])
+  }, [bx, by, lite])
 
   const fadeUp = (delay: number) => ({
     initial: { opacity: 0, y: 24 },
@@ -44,13 +47,13 @@ export function Hero({ start }: { start: boolean }) {
     <section id="top" ref={ref} className="relative grid h-svh min-h-[600px] grid-rows-[1fr_auto] overflow-hidden">
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute left-[6%] top-[15%] h-[40vmin] w-[40vmin] bg-violet/30 blur-[90px]"
-        style={{ x: bx, y: by, animation: 'blob 14s ease-in-out infinite' }}
+        className="blob blob-violet pointer-events-none absolute left-[6%] top-[15%] h-[40vmin] w-[40vmin]"
+        style={{ x: bx, y: by }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute bottom-[10%] right-[8%] h-[32vmin] w-[32vmin] bg-acid/20 blur-[90px]"
-        style={{ x: nbx, y: nby, animation: 'blob 18s ease-in-out infinite reverse' }}
+        className="blob blob-acid pointer-events-none absolute bottom-[10%] right-[8%] h-[32vmin] w-[32vmin]"
+        style={{ x: nbx, y: nby }}
       />
       <div aria-hidden className="spotlight pointer-events-none absolute inset-0" />
 

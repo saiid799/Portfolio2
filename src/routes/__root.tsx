@@ -3,6 +3,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import { LangProvider } from '../i18n'
+import { PerfProvider } from '../perf'
 import appCss from '../styles.css?url'
 
 export const Route = createRootRoute({
@@ -28,6 +29,13 @@ export const Route = createRootRoute({
       },
     ],
     links: [
+      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+      { rel: 'preload', as: 'image', href: '/images/profile.webp', type: 'image/webp' },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap',
+      },
       {
         rel: 'stylesheet',
         href: appCss,
@@ -44,7 +52,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <LangProvider>{children}</LangProvider>
+        <PerfProvider>
+          <LangProvider>{children}</LangProvider>
+        </PerfProvider>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

@@ -350,6 +350,13 @@ export function LangProvider({ children }: { children: ReactNode }) {
     const root = document.documentElement
     root.lang = lang
     root.dir = dir
+    if (lang === 'ar' && !document.getElementById('ar-fonts')) {
+      const l = document.createElement('link')
+      l.id = 'ar-fonts'
+      l.rel = 'stylesheet'
+      l.href = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Amiri:wght@400;700&display=swap'
+      document.head.appendChild(l)
+    }
     document.title = dicts[lang].meta.title
     document.querySelector('meta[name="description"]')?.setAttribute('content', dicts[lang].meta.description)
   }, [lang, dir])

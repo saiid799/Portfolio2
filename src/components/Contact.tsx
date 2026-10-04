@@ -22,7 +22,7 @@ export function Contact() {
 
   return (
     <section id="contact" className="relative overflow-hidden pt-16 sm:pt-24 lg:pt-40">
-      <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/3 h-[60vw] w-[60vw] -translate-x-1/2 rounded-full bg-acid/10 blur-[120px]" />
+      <div aria-hidden className="blob-acid-soft pointer-events-none absolute left-1/2 top-1/3 h-[60vw] w-[60vw] -translate-x-1/2 rounded-full" />
       <div className="section-pad relative">
         <Reveal>
           <p className="eyebrow mb-5 sm:mb-6">{t.contact.eyebrow}</p>
