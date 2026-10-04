@@ -1,4 +1,4 @@
-import { motion, useMotionTemplate, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
+import { m, useMotionTemplate, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { useInView } from 'motion/react'
 import { usePerf } from '../perf'
@@ -36,7 +36,7 @@ function Visual({ p }: { p: P }) {
         <div className="relative flex flex-col items-center gap-5">
           <svg viewBox="0 0 120 120" className="h-36 w-36 -rotate-90 sm:h-44 sm:w-44">
             <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.1)" strokeWidth="9" />
-            <motion.circle
+            <m.circle
               cx="60" cy="60" r="50" fill="none" stroke={c} strokeWidth="9" strokeLinecap="round"
               strokeDasharray="314"
               initial={{ strokeDashoffset: 314 }}
@@ -50,15 +50,15 @@ function Visual({ p }: { p: P }) {
             <div className="font-mono text-[10px] uppercase tracking-widest text-mute">kcal</div>
           </div>
           <div className="flex gap-2">
-            {['Protein', 'Carbs', 'Fat'].map((m, i) => (
-              <motion.span
-                key={m}
+            {['Protein', 'Carbs', 'Fat'].map((label, i) => (
+              <m.span
+                key={label}
                 className="rounded-full border border-white/15 px-3 py-1 font-mono text-[10px] uppercase tracking-wider"
                 animate={run ? { y: [0, -5, 0] } : { y: 0 }}
                 transition={{ duration: 3, delay: i * 0.3, ...loop }}
               >
-                {m}
-              </motion.span>
+                {label}
+              </m.span>
             ))}
           </div>
         </div>
@@ -68,7 +68,7 @@ function Visual({ p }: { p: P }) {
         <div className="relative flex flex-col items-center gap-6">
           <div className="flex h-28 items-center gap-1 sm:h-32 sm:gap-1.5">
             {Array.from({ length: 22 }).map((_, i) => (
-              <motion.span
+              <m.span
                 key={i}
                 className="w-1 rounded-full sm:w-1.5"
                 style={{ background: c, height: 24 }}
@@ -79,14 +79,14 @@ function Visual({ p }: { p: P }) {
           </div>
           <div className="flex flex-wrap justify-center gap-2 px-3">
             {['English', 'Español', '日本語', 'العربية', 'Türkçe'].map((l, i) => (
-              <motion.span
+              <m.span
                 key={l}
                 className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs"
                 animate={run ? { y: [0, -4, 0] } : { y: 0 }}
                 transition={{ duration: 3, delay: i * 0.25, ...loop }}
               >
                 {l}
-              </motion.span>
+              </m.span>
             ))}
           </div>
         </div>
@@ -96,7 +96,7 @@ function Visual({ p }: { p: P }) {
         <div className="relative flex flex-col items-center gap-4">
           <div className="flex h-32 items-end gap-2 sm:h-40 sm:gap-3">
             {[40, 62, 48, 80, 66, 94, 76].map((h, i) => (
-              <motion.span
+              <m.span
                 key={i}
                 className="w-5 origin-bottom rounded-t-md sm:w-6"
                 style={{ height: `${h}%`, background: `linear-gradient(to top, ${soft}, ${c})` }}
@@ -121,18 +121,18 @@ function Visual({ p }: { p: P }) {
             { me: true, t: 'Why is the sky blue?' },
             { me: false, t: 'Sunlight bounces off tiny air bits — blue bounces the most! 🌤️' },
             { me: true, t: 'Cool! Tell me more' },
-          ].map((m, i) => (
-            <motion.div
+          ].map((msg, i) => (
+            <m.div
               key={i}
-              className={`rounded-2xl px-4 py-2.5 text-sm ${m.me ? 'self-end rounded-br-sm text-black' : 'self-start rounded-bl-sm border border-white/15 bg-white/5'}`}
-              style={m.me ? { background: c } : undefined}
+              className={`rounded-2xl px-4 py-2.5 text-sm ${msg.me ? 'self-end rounded-br-sm text-black' : 'self-start rounded-bl-sm border border-white/15 bg-white/5'}`}
+              style={msg.me ? { background: c } : undefined}
               initial={{ opacity: 0, y: 16, scale: 0.9 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: false, amount: 0.6 }}
               transition={{ duration: 0.6, delay: 0.3 + i * 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              {m.t}
-            </motion.div>
+              {msg.t}
+            </m.div>
           ))}
         </div>
       )}
@@ -200,7 +200,7 @@ function Card({ p, i, total }: { p: P; i: number; total: number }) {
 
   return (
     <div ref={wrap} className="mb-6 lg:sticky lg:mb-0" style={{ top: lg ? `${6 + i * 2.2}vh` : undefined, perspective: 1600 }}>
-      <motion.div
+      <m.div
         ref={card}
         onPointerMove={onMove}
         onPointerLeave={onLeave}
@@ -213,8 +213,8 @@ function Card({ p, i, total }: { p: P; i: number; total: number }) {
         }}
         className="relative grid overflow-hidden rounded-[1.5rem] border border-white/10 sm:rounded-[2rem] lg:mb-[10vh] lg:min-h-[68vh] lg:grid-cols-[1.05fr_1fr]"
       >
-        <motion.div className="pointer-events-none absolute inset-0 z-20" style={{ background: glare }} />
-        <motion.div className="pointer-events-none absolute inset-0 z-30 bg-black" style={{ opacity: dim }} />
+        <m.div className="pointer-events-none absolute inset-0 z-20" style={{ background: glare }} />
+        <m.div className="pointer-events-none absolute inset-0 z-30 bg-black" style={{ opacity: dim }} />
 
         <span aria-hidden dir="ltr" className="outline-text pointer-events-none absolute end-6 top-2 z-0 hidden font-serif text-[9rem] italic leading-none opacity-50 lg:block">
           {String(i + 1).padStart(2, '0')}
@@ -269,7 +269,7 @@ function Card({ p, i, total }: { p: P; i: number; total: number }) {
         <div className="relative z-10 p-4 pt-0 sm:p-6 sm:pt-0 lg:p-8">
           <Visual p={p} />
         </div>
-      </motion.div>
+      </m.div>
     </div>
   )
 }

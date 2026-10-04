@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, m } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { profile } from '../data'
 import { useI18n } from '../i18n'
@@ -27,7 +27,7 @@ export function WhatsAppFab({ show }: { show: boolean }) {
   return (
     <AnimatePresence>
       {show && past && (
-        <motion.a
+        <m.a
           href={href}
           target="_blank"
           rel="noopener noreferrer"
@@ -44,7 +44,7 @@ export function WhatsAppFab({ show }: { show: boolean }) {
           <span className="hidden max-w-0 overflow-hidden whitespace-nowrap font-medium transition-all duration-500 group-hover:max-w-[14rem] group-hover:pe-2 sm:inline">
             {t.contact.wa}
           </span>
-        </motion.a>
+        </m.a>
       )}
     </AnimatePresence>
   )

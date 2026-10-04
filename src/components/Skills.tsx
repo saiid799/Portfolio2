@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { skills } from '../data'
 import { useI18n } from '../i18n'
 import { ease, Reveal } from './fx'
@@ -18,7 +18,7 @@ export function Skills() {
 
       <div className="border-t border-white/10">
         {skills.map((items, gi) => (
-          <motion.div
+          <m.div
             key={gi}
             className="group grid gap-4 border-b border-white/10 py-6 transition-colors hover:bg-white/[0.02] sm:gap-6 sm:py-8 md:grid-cols-[260px_1fr] md:items-center"
             initial="hidden"
@@ -34,7 +34,7 @@ export function Skills() {
             </div>
             <div className="flex flex-wrap gap-2 sm:gap-3" dir="ltr">
               {items.map((s) => (
-                <motion.span
+                <m.span
                   key={s}
                   variants={{
                     hidden: { opacity: 0, y: 24, scale: 0.9 },
@@ -44,10 +44,10 @@ export function Skills() {
                   className="rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-sm transition-colors hover:border-acid hover:bg-acid hover:text-black sm:px-5 sm:py-2.5 sm:text-base"
                 >
                   {s}
-                </motion.span>
+                </m.span>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         ))}
       </div>
     </section>

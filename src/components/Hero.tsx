@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react'
+import { m, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react'
 import { useEffect, useRef } from 'react'
 import { techMarquee } from '../data'
 import { useI18n } from '../i18n'
@@ -45,12 +45,12 @@ export function Hero({ start }: { start: boolean }) {
 
   return (
     <section id="top" ref={ref} className="relative grid h-svh min-h-[600px] grid-rows-[1fr_auto] overflow-hidden">
-      <motion.div
+      <m.div
         aria-hidden
         className="blob blob-violet pointer-events-none absolute left-[6%] top-[15%] h-[40vmin] w-[40vmin]"
         style={{ x: bx, y: by }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="blob blob-acid pointer-events-none absolute bottom-[10%] right-[8%] h-[32vmin] w-[32vmin]"
         style={{ x: nbx, y: nby }}
@@ -59,17 +59,17 @@ export function Hero({ start }: { start: boolean }) {
 
       <Portrait start={start} />
 
-      <motion.div
+      <m.div
         style={{ y, opacity: fade, ['--hf' as string]: factor }}
         className="section-pad relative z-10 flex flex-col justify-end pb-[3svh] pt-20 lg:justify-center lg:pb-0"
       >
-        <motion.p {...fadeUp(0.2)} className="eyebrow mb-[1.5svh] flex items-center gap-3 lg:mb-[2svh]">
+        <m.p {...fadeUp(0.2)} className="eyebrow mb-[1.5svh] flex items-center gap-3 lg:mb-[2svh]">
           <span className="relative flex h-2 w-2 shrink-0">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-acid opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
           </span>
           {t.hero.available}
-        </motion.p>
+        </m.p>
 
         <h1 className="font-serif leading-[0.98] tracking-tight text-[calc(clamp(2rem,min(11vw,9.5svh),8.5rem)*var(--hf))] sm:text-[calc(clamp(2rem,min(9vw,9.5svh),8.5rem)*var(--hf))] lg:max-w-[54%] lg:text-[calc(clamp(2rem,min(7.4vw,13svh),8.5rem)*var(--hf))]">
           <span className="block text-mute italic">
@@ -83,14 +83,14 @@ export function Hero({ start }: { start: boolean }) {
           </span>
         </h1>
 
-        <motion.p
+        <m.p
           {...fadeUp(1.2)}
           className="mt-[2svh] max-w-[38ch] text-[clamp(0.95rem,min(1.6vw,2.4svh),1.3rem)] leading-relaxed text-paper/70 max-lg:[@media(max-height:700px)]:hidden lg:mt-[2.5svh]"
         >
           {t.hero.sub}
-        </motion.p>
+        </m.p>
 
-        <motion.div {...fadeUp(1.35)} className="mt-[2.5svh] flex flex-wrap gap-3 sm:gap-4 lg:mt-[3svh]">
+        <m.div {...fadeUp(1.35)} className="mt-[2.5svh] flex flex-wrap gap-3 sm:gap-4 lg:mt-[3svh]">
           <Magnetic>
             <a
               href="#work"
@@ -108,8 +108,8 @@ export function Hero({ start }: { start: boolean }) {
               {t.hero.cta2}
             </a>
           </Magnetic>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       <Marquee
         className="relative z-10 border-y border-white/10 py-[1.4svh] font-serif text-[clamp(1.3rem,4.4svh,3.5rem)] italic text-paper/70"

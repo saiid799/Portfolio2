@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { LazyMotion } from 'motion/react'
 import { useCallback, useState } from 'react'
 import { About } from '../components/About'
 import { Contact } from '../components/Contact'
@@ -10,12 +11,15 @@ import { Projects } from '../components/Projects'
 import { Skills } from '../components/Skills'
 import { WhatsAppFab } from '../components/WhatsApp'
 
+const loadFeatures = () => import('../motionFeatures').then((m) => m.default)
+
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
   const [ready, setReady] = useState(false)
   const done = useCallback(() => setReady(true), [])
   return (
+    <LazyMotion features={loadFeatures} strict>
     <main className="grain">
       <Preloader onDone={done} />
       <Cursor />
@@ -29,5 +33,6 @@ function App() {
       <Contact />
       <WhatsAppFab show={ready} />
     </main>
+    </LazyMotion>
   )
 }

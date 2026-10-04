@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
+import { m, useMotionValue, useSpring, useTransform } from 'motion/react'
 import { useEffect } from 'react'
 import { useI18n } from '../i18n'
 import { usePerf } from '../perf'
@@ -45,7 +45,7 @@ export function Portrait({ start }: { start: boolean }) {
       className="pointer-events-none absolute inset-x-0 top-[9svh] z-[1] mx-auto aspect-square w-[min(60vw,34svh)] md:w-[min(46vw,38svh)] lg:inset-x-auto lg:bottom-[11svh] lg:top-auto lg:mx-0 lg:w-[min(44vw,74svh)] lg:end-[3vw]"
     >
       {/* giant outlined word behind everything */}
-      <motion.span
+      <m.span
         className="outline-text absolute -left-[22%] top-[4%] hidden select-none font-serif text-[clamp(8rem,26vw,24rem)] italic leading-none sm:block"
         style={{ x: wordX }}
         initial={{ opacity: 0 }}
@@ -53,10 +53,10 @@ export function Portrait({ start }: { start: boolean }) {
         transition={{ duration: 1.2, delay: 0.6 }}
       >
         {t.word}
-      </motion.span>
+      </m.span>
 
       {/* accent disc + rotating text ring */}
-      <motion.div
+      <m.div
         className="absolute inset-[7%]"
         style={{ x: discX, y: discY }}
         initial={{ scale: lite ? 1 : 0, opacity: 0 }}
@@ -65,23 +65,20 @@ export function Portrait({ start }: { start: boolean }) {
       >
         <div className="disc-glow absolute inset-0 rounded-full bg-acid" />
         <div className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.45), transparent 50%)' }} />
-        <svg viewBox="0 0 200 200" className="absolute -inset-[9%] h-[118%] w-[118%] overflow-visible">
+        <svg viewBox="0 0 200 200" className="ring-spin absolute -inset-[9%] h-[118%] w-[118%] overflow-visible">
           <defs>
             <path id="ring" d="M100 100 m-97 0 a97 97 0 1 1 194 0 a97 97 0 1 1 -194 0" />
           </defs>
           <g>
-            {!lite && (
-              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="40s" repeatCount="indefinite" />
-            )}
             <text fill="#f2efe9" fontSize="9.5" letterSpacing="3.2" fontFamily="JetBrains Mono, monospace" style={{ textTransform: 'uppercase' }}>
               <textPath href="#ring" textLength="600" lengthAdjust="spacing">{dir === 'rtl' ? RING_LATIN : t.hero.ring}</textPath>
             </text>
           </g>
         </svg>
-      </motion.div>
+      </m.div>
 
       {/* the face (small transparent WebP, ~34 KB) — bottom-aligned inside the disc area */}
-      <motion.div
+      <m.div
         className="absolute inset-0"
         style={{ x: faceX, y: faceY, rotate: faceR }}
         initial={{ opacity: 0 }}
@@ -100,7 +97,7 @@ export function Portrait({ start }: { start: boolean }) {
             draggable={false}
           />
         </div>
-      </motion.div>
+      </m.div>
     </div>
   )
 }

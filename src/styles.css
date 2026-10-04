@@ -152,3 +152,7 @@ html, body { max-width: 100%; }
 [data-perf="lite"] .mix-blend-difference { mix-blend-mode: normal; background: rgba(7, 7, 10, 0.82); }
 [data-perf="lite"] .marquee-track { animation-duration: 45s; }
 [data-perf="lite"] html, html[data-perf="lite"] { scroll-behavior: auto; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.ring-spin { animation: spin 40s linear infinite; will-change: transform; }
+[data-perf="lite"] .ring-spin { animation: none; will-change: auto; }

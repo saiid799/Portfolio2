@@ -1,5 +1,5 @@
 import {
-  motion,
+  m,
   useMotionValue,
   useScroll,
   useSpring,
@@ -11,7 +11,7 @@ import {
 } from 'motion/react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useI18n } from '../i18n'
-import { usePerf } from '../perf'
+import { hintedLite, usePerf } from '../perf'
 
 export const ease = [0.16, 1, 0.3, 1] as const
 
@@ -29,7 +29,7 @@ export function Preloader({ onDone }: { onDone: () => void }) {
       sessionStorage.setItem('seen', '1')
     } catch {}
     const c = animate(0, 100, {
-      duration: seen ? 0.4 : 1.5,
+      duration: seen ? 0.3 : hintedLite() ? 0.7 : 1.5,
       ease: [0.65, 0, 0.35, 1],
       onUpdate: (v) => setN(Math.round(v)),
       onComplete: () => {
@@ -46,7 +46,7 @@ export function Preloader({ onDone }: { onDone: () => void }) {
   }, [onDone])
 
   return (
-    <motion.div
+    <m.div
       dir="ltr"
       className="fixed inset-0 z-[100] flex items-end justify-between gap-4 bg-ink p-5 sm:p-12"
       initial={{ y: 0 }}
@@ -63,8 +63,8 @@ export function Preloader({ onDone }: { onDone: () => void }) {
         {String(n).padStart(2, '0')}
         <span className="text-acid">%</span>
       </div>
-      <motion.div className="absolute inset-x-0 bottom-0 h-1 origin-left bg-acid" style={{ scaleX: n / 100 }} />
-    </motion.div>
+      <m.div className="absolute inset-x-0 bottom-0 h-1 origin-left bg-acid" style={{ scaleX: n / 100 }} />
+    </m.div>
   )
 }
 
@@ -108,11 +108,11 @@ export function Cursor() {
   if (!enabled) return null
   return (
     <>
-      <motion.div
+      <m.div
         className="pointer-events-none fixed left-0 top-0 z-[95] h-2 w-2 rounded-full bg-acid"
         style={{ x: sx, y: sy, translateX: '-50%', translateY: '-50%' }}
       />
-      <motion.div
+      <m.div
         className="pointer-events-none fixed left-0 top-0 z-[94] flex items-center justify-center rounded-full border border-acid/70 font-mono text-[10px] uppercase tracking-widest text-ink"
         style={{ x: rx, y: ry, translateX: '-50%', translateY: '-50%' }}
         animate={{
@@ -123,7 +123,7 @@ export function Cursor() {
         transition={{ duration: 0.25, ease }}
       >
         {label}
-      </motion.div>
+      </m.div>
     </>
   )
 }
@@ -133,7 +133,7 @@ export function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30 })
   return (
-    <motion.div
+    <m.div
       className="fixed inset-x-0 top-0 z-[80] h-[3px] origin-left bg-acid rtl:origin-right"
       style={{ scaleX }}
     />
@@ -146,7 +146,7 @@ export function Magnetic({ children, strength = 0.35 }: { children: ReactNode; s
   const x = useSpring(useMotionValue(0), { stiffness: 220, damping: 15, mass: 0.3 })
   const y = useSpring(useMotionValue(0), { stiffness: 220, damping: 15, mass: 0.3 })
   return (
-    <motion.div
+    <m.div
       ref={ref}
       className="inline-block"
       style={{ x, y }}
@@ -162,7 +162,7 @@ export function Magnetic({ children, strength = 0.35 }: { children: ReactNode; s
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -183,14 +183,14 @@ export function SplitLetters({
   const { lite } = usePerf()
   if (lite) {
     return (
-      <motion.span
+      <m.span
         className={`inline-block ${className}`}
         initial={{ opacity: 0, y: 16 }}
         animate={start ? { opacity: 1, y: 0 } : undefined}
         transition={{ duration: 0.6, ease, delay: Math.min(delay, 0.6) }}
       >
         {text}
-      </motion.span>
+      </m.span>
     )
   }
   const byWord = ARABIC.test(text)
@@ -204,14 +204,14 @@ export function SplitLetters({
           <span key={wi} className={`inline-block ${byWord ? 'me-[0.25em]' : 'whitespace-nowrap'}`} aria-hidden>
             {pieces.map((ch, i) => (
               <span key={i} className="inline-block overflow-hidden align-bottom" style={byWord ? { paddingBlock: '0.15em', marginBlock: '-0.15em' } : undefined}>
-                <motion.span
+                <m.span
                   className="inline-block"
                   initial={{ y: '110%', rotate: byWord ? 0 : 8 }}
                   animate={start ? { y: 0, rotate: 0 } : undefined}
                   transition={{ duration: 1, ease, delay: delay + (byWord ? wi * 0.12 : (offset + i) * 0.045) }}
                 >
                   {ch === ' ' ? ' ' : ch}
-                </motion.span>
+                </m.span>
               </span>
             ))}
           </span>
@@ -252,9 +252,9 @@ function Word({
 }) {
   const opacity = useTransform(progress, range, [0.12, 1])
   return (
-    <motion.span style={{ opacity }} className="me-[0.25em] inline-block">
+    <m.span style={{ opacity }} className="me-[0.25em] inline-block">
       {children}
-    </motion.span>
+    </m.span>
   )
 }
 
@@ -271,7 +271,7 @@ export function Reveal({
   className?: string
 }) {
   return (
-    <motion.div
+    <m.div
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -279,7 +279,7 @@ export function Reveal({
       transition={{ duration: 0.9, ease, delay }}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -310,7 +310,7 @@ export function Marquee({ items, className = '' }: { items: string[]; className?
   const skew = useTransform(smooth, [-3000, 3000], [-10, 10])
   const row = [...items, ...items]
   return (
-    <motion.div dir="ltr" style={{ skewX: lite ? 0 : skew }} className={`overflow-hidden ${className}`}>
+    <m.div dir="ltr" style={{ skewX: lite ? 0 : skew }} className={`overflow-hidden ${className}`}>
       <div className="marquee-track flex w-max gap-8 whitespace-nowrap sm:gap-10">
         {row.map((t, i) => (
           <span key={i} className="flex items-center gap-8 sm:gap-10">
@@ -319,6 +319,6 @@ export function Marquee({ items, className = '' }: { items: string[]; className?
           </span>
         ))}
       </div>
-    </motion.div>
+    </m.div>
   )
 }

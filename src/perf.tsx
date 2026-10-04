@@ -12,8 +12,10 @@ export type Tier = 'full' | 'lite'
 
 type NetInfo = { saveData?: boolean; effectiveType?: string }
 
-function hintedLite(): boolean {
+export function hintedLite(): boolean {
   if (typeof window === 'undefined') return false
+  // phones & small touch tablets: decorative effects (parallax, tilt, grain, blur) are desktop-oriented anyway
+  if (window.matchMedia('(pointer: coarse)').matches && window.innerWidth < 1024) return true
   const nav = navigator as Navigator & { deviceMemory?: number; connection?: NetInfo }
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true
   if (nav.connection?.saveData) return true

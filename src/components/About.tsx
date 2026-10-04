@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { profile } from '../data'
 import { useI18n } from '../i18n'
 import { Counter, ease, Reveal, ScrubText } from './fx'
@@ -19,7 +19,7 @@ export function About() {
 
       <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 sm:mt-24 lg:grid-cols-4">
         {profile.stats.map((s, i) => (
-          <motion.div
+          <m.div
             key={i}
             className="group relative bg-ink p-5 transition-colors hover:bg-ink-2 sm:p-8"
             initial={{ opacity: 0, y: 30 }}
@@ -31,7 +31,7 @@ export function About() {
               <Counter to={s.value} suffix={s.suffix} />
             </div>
             <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.15em] text-mute sm:mt-3 sm:text-xs sm:tracking-[0.18em]">{t.about.stats[i]}</div>
-          </motion.div>
+          </m.div>
         ))}
       </div>
 

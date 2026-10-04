@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, m } from 'motion/react'
 import { useState } from 'react'
 import { profile } from '../data'
 import { useI18n } from '../i18n'
@@ -28,7 +28,7 @@ export function Contact() {
           <p className="eyebrow mb-5 sm:mb-6">{t.contact.eyebrow}</p>
         </Reveal>
         <h2 className="font-serif text-[clamp(2.8rem,12vw,12rem)] leading-[0.95]">
-          <motion.span
+          <m.span
             className="block"
             initial={{ y: '40%', opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
@@ -36,8 +36,8 @@ export function Contact() {
             transition={{ duration: 1, ease }}
           >
             {t.contact.l1}
-          </motion.span>
-          <motion.span
+          </m.span>
+          <m.span
             className="block italic text-acid"
             initial={{ y: '40%', opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
@@ -45,7 +45,7 @@ export function Contact() {
             transition={{ duration: 1, ease, delay: 0.12 }}
           >
             {t.contact.l2}
-          </motion.span>
+          </m.span>
         </h2>
 
         <Reveal className="mt-10 flex flex-wrap items-center gap-4 sm:mt-14 sm:gap-6">
@@ -76,7 +76,7 @@ export function Contact() {
             className="relative h-12 min-w-36 rounded-full border border-white/25 px-6 font-mono text-xs uppercase tracking-[0.18em] transition hover:border-acid hover:text-acid sm:h-14"
           >
             <AnimatePresence mode="wait">
-              <motion.span
+              <m.span
                 key={String(copied)}
                 className="block"
                 initial={{ y: 14, opacity: 0 }}
@@ -85,7 +85,7 @@ export function Contact() {
                 transition={{ duration: 0.2 }}
               >
                 {copied ? t.contact.copied : t.contact.copy}
-              </motion.span>
+              </m.span>
             </AnimatePresence>
           </button>
         </Reveal>

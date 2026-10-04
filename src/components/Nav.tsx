@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
+import { AnimatePresence, m, useMotionValueEvent, useScroll } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { LANGS, useI18n } from '../i18n'
 import { ease, Magnetic } from './fx'
@@ -7,7 +7,12 @@ import { ease, Magnetic } from './fx'
 function LangSwitch({ className = '' }: { className?: string }) {
   const { lang, setLang } = useI18n()
   return (
-    <div dir="ltr" className={`relative flex rounded-full border border-white/25 p-0.5 ${className}`} role="group" aria-label="Language">
+    <div dir="ltr" className={`relative grid grid-cols-4 rounded-full border border-white/25 p-0.5 ${className}`} role="group" aria-label="Language">
+      <span
+        aria-hidden
+        className="absolute inset-y-0.5 left-0.5 w-[calc(25%-0.125rem)] rounded-full bg-acid transition-transform duration-300 ease-out"
+        style={{ transform: `translateX(${LANGS.findIndex((x) => x.code === lang) * 100}%)` }}
+      />
       {LANGS.map((l) => (
         <button
           key={l.code}
@@ -19,9 +24,6 @@ function LangSwitch({ className = '' }: { className?: string }) {
             lang === l.code ? 'text-black' : 'text-white/80 hover:text-white'
           }`}
         >
-          {lang === l.code && (
-            <motion.span layoutId="lang-pill" className="absolute inset-0 -z-10 rounded-full bg-acid" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />
-          )}
           {l.label}
         </button>
       ))}
@@ -57,7 +59,7 @@ export function Nav({ show }: { show: boolean }) {
 
   return (
     <>
-      <motion.header
+      <m.header
         className="fixed inset-x-0 top-0 z-[70] flex items-center justify-between gap-3 px-4 py-3 mix-blend-difference sm:px-10 sm:py-4"
         initial={{ y: -80, opacity: 0 }}
         animate={show ? { y: hidden && !open ? -90 : 0, opacity: 1 } : {}}
@@ -96,12 +98,12 @@ export function Nav({ show }: { show: boolean }) {
             <span className={`absolute h-px w-4 bg-white transition-transform duration-300 ${open ? '-rotate-45' : 'translate-y-1'}`} />
           </button>
         </div>
-      </motion.header>
+      </m.header>
 
       {/* full-screen mobile / tablet menu */}
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             className="fixed inset-0 z-[65] flex flex-col justify-between bg-ink px-5 pb-8 pt-24 lg:hidden"
             initial={{ clipPath: 'circle(0% at 90% 5%)' }}
             animate={{ clipPath: 'circle(150% at 90% 5%)' }}
@@ -110,7 +112,7 @@ export function Nav({ show }: { show: boolean }) {
           >
             <nav className="flex flex-col">
               {links.map(([l, h], i) => (
-                <motion.a
+                <m.a
                   key={h}
                   href={h}
                   onClick={() => setOpen(false)}
@@ -121,7 +123,7 @@ export function Nav({ show }: { show: boolean }) {
                 >
                   <span className="font-mono text-xs text-acid" dir="ltr">0{i + 1}</span>
                   {l}
-                </motion.a>
+                </m.a>
               ))}
             </nav>
             <div className="flex flex-col items-start gap-5">
@@ -134,7 +136,7 @@ export function Nav({ show }: { show: boolean }) {
                 {t.nav.talk}
               </a>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

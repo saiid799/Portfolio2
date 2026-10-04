@@ -1,4 +1,4 @@
-import { motion, useScroll, useSpring } from 'motion/react'
+import { m, useScroll, useSpring } from 'motion/react'
 import { useRef } from 'react'
 import { useI18n } from '../i18n'
 import { ease, Reveal } from './fx'
@@ -22,10 +22,10 @@ export function Journey() {
 
       <div ref={ref} className="relative ps-7 sm:ps-16">
         <div className="absolute bottom-0 start-0 top-0 w-px bg-white/10" />
-        <motion.div className="absolute start-0 top-0 w-px origin-top bg-acid" style={{ scaleY: h, height: '100%' }} />
+        <m.div className="absolute start-0 top-0 w-px origin-top bg-acid" style={{ scaleY: h, height: '100%' }} />
 
         {t.journey.items.map((e, i) => (
-          <motion.article
+          <m.article
             key={i}
             className="relative mb-14 last:mb-0 sm:mb-20"
             initial={{ opacity: 0, x: slide }}
@@ -45,7 +45,7 @@ export function Journey() {
                 </li>
               ))}
             </ul>
-          </motion.article>
+          </m.article>
         ))}
       </div>
     </section>
